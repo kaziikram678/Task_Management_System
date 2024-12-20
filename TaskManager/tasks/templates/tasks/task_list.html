@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+</head>
+<body>
+    <h1>Task List</h1>
+
+    <div>
+        <form method="get">
+            <input type="text" name="search" placeholder="Search by title" value="{{ request.GET.search }}">
+            <select name="priority">
+                <option value="">All Priorities</option>
+                <option value="Low" {% if request.GET.priority == "Low" %}selected{% endif %}>Low</option>
+                <option value="Medium" {% if request.GET.priority == "Medium" %}selected{% endif %}>Medium</option>
+                <option value="High" {% if request.GET.priority == "High" %}selected{% endif %}>High</option>
+            </select>
+            <select name="status">
+                <option value="">All Statuses</option>
+                <option value="Pending" {% if request.GET.status == "Pending" %}selected{% endif %}>Pending</option>
+                <option value="In Progress" {% if request.GET.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                <option value="Completed" {% if request.GET.status == "Completed" %}selected{% endif %}>Completed</option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.priority }}</td>
+                <td>{{ task.status }}</td>
+                <td>{{ task.due_date }}</td>
+                <td>
+                    <a href="{% url 'task-update' task.id %}">Edit</a>
+                    <a href="{% url 'task-delete' task.id %}">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No tasks found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'task-create' %}">Create New Task</a>
+</body>
+</html>
